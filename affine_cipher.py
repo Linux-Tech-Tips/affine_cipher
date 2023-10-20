@@ -4,7 +4,7 @@ import alphabet
 
 # Returns the inverse of a number in modulo m (within Z_m) or None if the number has no inverse
 def inverse(a : int, mod : int) -> int:
-	for x in range(1, 27):
+	for x in range(1, mod):
 		if (x*a % mod) == 1:
 			return x
 	return None
