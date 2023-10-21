@@ -14,13 +14,17 @@ def inverse(a : int, mod : int) -> int:
 #  when the given parameter is a letter, the corresponding number is returned, when given parameter is a number, the corresponding letter is returned, when None is given, the modulus is returned
 def encrypt(text : str, a : int, b : int, alphabet) -> str:
 	result = ""
+	extChars = ""
 	for c in text:
-		if c == ' ':
-			result += ' '
-		else:
-			idx = alphabet(c)
-			newIdx = (int(a) * idx + int(b)) % 26
+		idx = alphabet(c)
+		if idx is not None:
+			newIdx = (int(a) * idx + int(b)) % alphabet(None)
 			result += alphabet(newIdx)
+		else:
+			extChars += "'" + c + "', "
+			result += c
+	if extChars != "":
+		print("Invalid characters in plaintext skipped - " + extChars + "- outside of encrypt function available alphabet")
 	return result
 
 # Decrypts the given text using an affine cipher with the given keys a,b utilising the given alphabet function
@@ -34,12 +38,12 @@ def decrypt(text : str, a : int, b : int, alphabet) -> str:
 		return None
 
 	for c in text:
-		if c == ' ':
-			result += ' '
-		else:
-			idx = alphabet(c)
-			newIdx = ((idx - int(b)) * inv) % 26
+		idx = alphabet(c)
+		if idx is not None:
+			newIdx = ((idx - int(b)) * inv) % alphabet(None)
 			result += alphabet(newIdx)
+		else:
+			result += c
 	return result
 
 
@@ -50,3 +54,12 @@ def encrypt26(text : str, a : int, b : int) -> str:
 # Decrypts the given text using an affine cipher in a standard Z_26 alphabet
 def decrypt26(text : str, a : int, b : int) -> str:
 	return decrypt(text, a, b, alphabet.standard)
+
+# Encrypts the given text using an affine cipher on an extended character set
+def encryptExt(text : str, a : int, b : int) -> str:
+	return encrypt(text, a, b, alphabet.extended)
+
+# Decrypts the given text using an affine cipher on an extended character set
+def decryptExt(text : str, a : int, b : int) -> str:
+	return decrypt(text, a, b, alphabet.extended)
+
